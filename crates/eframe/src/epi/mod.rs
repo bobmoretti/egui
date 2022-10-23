@@ -380,7 +380,6 @@ pub struct NativeOptions {
     ///
     /// Wayland desktop currently not supported.
     pub centered: bool,
-
     /// Configures wgpu instance/device/adapter/surface creation and renderloop.
     #[cfg(feature = "wgpu")]
     pub wgpu_options: egui_wgpu::WgpuConfiguration,
@@ -428,6 +427,13 @@ pub struct NativeOptions {
     /// }
     /// ```
     pub app_id: Option<String>,
+
+    /// Pass in an egui context.
+    ///
+    /// In contexts where eframe is not run from a main thread,
+    /// the user can create a `egui::Context::default()` and clone
+    /// it into here so that it has a handle to the GUI.
+    pub context: Option<egui::Context>,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -438,6 +444,7 @@ impl Clone for NativeOptions {
 
             #[cfg(any(feature = "glow", feature = "wgpu"))]
             event_loop_builder: None, // Skip any builder callbacks if cloning
+            context: self.context.clone(),
 
             #[cfg(feature = "wgpu")]
             wgpu_options: self.wgpu_options.clone(),
@@ -497,6 +504,7 @@ impl Default for NativeOptions {
             shader_version: None,
 
             centered: false,
+            context: None,
 
             #[cfg(feature = "wgpu")]
             wgpu_options: egui_wgpu::WgpuConfiguration::default(),

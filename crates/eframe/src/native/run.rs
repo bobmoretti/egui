@@ -710,6 +710,7 @@ mod glow_integration {
                 &self.app_name,
                 &self.native_options,
                 storage,
+                self.native_options.context.clone(),
                 Some(gl.clone()),
                 #[cfg(feature = "wgpu")]
                 None,
@@ -1172,6 +1173,7 @@ mod wgpu_integration {
                 &self.native_options,
                 storage,
                 #[cfg(feature = "glow")]
+                self.native_options.context.clone(),
                 None,
                 wgpu_render_state.clone(),
             );
